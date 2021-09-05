@@ -1,0 +1,12 @@
+create database <dfatabase name>;
+use <database name>;
+create table <local table name>(enter your data and variables) row format serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde';
+LOAD DATA LOCAL INPATH '<location of your RAW data file>' OVERWRITE INTO TABLE <local table name>;
+
+#add jar /root/elasticsearch-hadoop-7.14.1/dist/elasticsearch-hadoop-hive-7.14.1.jar;
+
+create external table <external table name to be mapped with elasticsearch>(same as table) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+TBLPROPERTIES('es.resource' = '<your index/resource name>','es.nodes' = '<your host>','es.port' = '<port>');
+
+
+insert overwrite table <external table> select * from <local table>;

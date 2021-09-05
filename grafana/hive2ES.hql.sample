@@ -1,0 +1,41 @@
+
+create database elastic1;
+use elastic1;
+create table moviesml(movieID int,title string,generes string) row format serde 'org.apache.hadoop.hive.serde2.OpenCSVSerde';
+LOAD DATA LOCAL INPATH '/root/ml-25m/movies.csv' OVERWRITE INTO TABLE moviesml;
+
+add jar /root/elasticsearch-hadoop-7.14.1/dist/elasticsearch-hadoop-hive-7.14.1.jar;
+
+create external table moviesml_es(movieID int,title string,generes string) STORED BY 'org.elasticsearch.hadoop.hive.EsStorageHandler'
+TBLPROPERTIES('es.resource' = 'ml/movies','es.nodes' = 'http://172.17.0.1','es.port' = '9200');
+
+
+insert overwrite table moviesml_es select * from moviesml;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/root/elasticsearch-hadoop-7.14.1/dist/elasticsearch-hadoop-hive-7.14.1.jar;
+
